@@ -1,0 +1,1 @@
+export { default as InboxComponent } from './InboxComponent'

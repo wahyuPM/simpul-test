@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import { floatButtonMode } from '@/atoms';
@@ -10,11 +11,15 @@ const FloatingButton: React.FC = () => {
 
     const buttonClasses = "text-white rounded-full w-[68px] h-[68px] flex items-center justify-center cursor-pointer";
     const transitionClasses = "relative transition-transform duration-300";
+    const orderTransitionClass = "transition-order duration-300";
 
     const labels = ['Task', 'Inbox'];
 
     const handleClickButtonMode = (value: string) => {
         setBtnMode(prev => prev === value ? null : value);
+        if (value === btnMode) {
+            handleClick()
+        }
     };
 
     return (
@@ -28,13 +33,13 @@ const FloatingButton: React.FC = () => {
                     return (
                         <div
                             key={label}
-                            className={`${transitionClasses} ${orderClass}`}
+                            className={`${transitionClasses} ${orderTransitionClass} ${orderClass}`}
                             style={{
                                 transform: showSecondary ? 'translateX(0)' : `translateX(${(reverseIndex + 1) * 100}%) scale(0.75)`,
                             }}
                         >
                             <div className="flex flex-col items-center mr-[26px]">
-                                <span className={`text-sm mb-2 text-[#F2F2F2] ${showSecondary ? '' : 'invisible'}`}>{label}</span>
+                                <span className={`text-sm mb-2 text-[#F2F2F2] ${showSecondary && btnMode === null ? '' : 'invisible'}`}>{label}</span>
                                 <button onClick={() => handleClickButtonMode(label)} className={buttonClasses} style={{ background: bgColor }}>
                                     <svg width={label === 'Task' ? "26" : "24"} height={label === 'Task' ? "20" : "23"} viewBox="0 0 26 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path fillRule="evenodd" clipRule="evenodd" d={label === 'Task' ?
