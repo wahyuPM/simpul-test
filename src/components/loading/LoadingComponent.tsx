@@ -15,7 +15,7 @@ const LoadingComponent: React.FC<LoadingComponentProps> = ({ loading, className 
                 data-testid="loader"
                 loading={loading}
             />
-            <p>Loading Chats...</p>
+            {loading && <p>Loading Chats...</p>}
         </div>
     )
 }

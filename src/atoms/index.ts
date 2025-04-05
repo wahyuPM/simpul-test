@@ -1,3 +1,5 @@
 import { atom } from "jotai";
 
-export const floatButtonMode = atom<string | null>(null)
+export type floatButtonModeType = 'Task' | 'Inbox' | null;
+
+export const floatButtonMode = atom<floatButtonModeType>(null)

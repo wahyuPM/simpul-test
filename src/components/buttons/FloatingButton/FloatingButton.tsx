@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useAtom } from 'jotai';
-import { floatButtonMode } from '@/atoms';
+import { floatButtonMode, floatButtonModeType } from '@/atoms';
 
 const FloatingButton: React.FC = () => {
     const [btnMode, setBtnMode] = useAtom(floatButtonMode);
@@ -15,7 +15,7 @@ const FloatingButton: React.FC = () => {
 
     const labels = ['Task', 'Inbox'];
 
-    const handleClickButtonMode = (value: string) => {
+    const handleClickButtonMode = (value: floatButtonModeType) => {
         setBtnMode(prev => prev === value ? null : value);
         if (value === btnMode) {
             handleClick()
