@@ -8,7 +8,7 @@ const LayoutDefault: React.FC<LayoutDefaultProps> = ({ children }) => {
     return (
         <main className='relative bg-[#333333]'>
             <div className='grid grid-cols-[285px_1fr]'>
-                <aside className='border-r-[#F2F2F2] border-r'>Sidebar</aside>
+                <aside className='border-r-[#F2F2F2] border-r'></aside>
                 <section className='min-h-screen'>
                     {/* start:navbar */}
                     <nav className='bg-[#4F4F4F] h-[58px] px-[26px] flex items-center'>

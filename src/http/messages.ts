@@ -36,11 +36,15 @@ export type MessageThread = {
     messages: Message[];
 };
 
+export type GroupedMessages = Record<string, Message[]>;
+
 class MessagesService {
     private baseURL: string;
+    private messageThreadsMap: Map<string, MessageThread>;
 
     constructor() {
         this.baseURL = BASE_URL;
+        this.messageThreadsMap = new Map();
     }
 
     async getMessages(signal: AbortSignal): Promise<MessagesResponse> {
@@ -56,51 +60,128 @@ class MessagesService {
     async getMessageThreads(signal: AbortSignal): Promise<MessageThread[]> {
         const { data: users } = await this.getMessages(signal);
 
+        const threads = [
+            {
+                id: "1",
+                subject: "Naturalization",
+                participants: [users[0].first_name, users[1].first_name],
+                date: "2025-04-01",
+                messages: [
+                    {
+                        sender: users[0].first_name,
+                        content: "Hey, are we still on for the meeting tomorrow?",
+                        time: "09:00 AM",
+                    },
+                    {
+                        sender: "You",
+                        content: "Yes, absolutely. What time works for you?",
+                        time: "09:05 AM",
+                    },
+                    {
+                        sender: "Charlie",
+                        content: "I can join anytime after 10 AM.",
+                        time: "09:10 AM",
+                    },
+                ],
+            },
+            {
+                id: "2",
+                subject: "Visa Application",
+                participants: [users[2].first_name, users[3].first_name],
+                date: "2025-04-02",
+                messages: [
+                    {
+                        sender: "You",
+                        content: "Just checking in, are we all set for the meeting?",
+                        time: "10:00 AM",
+                    },
+                    {
+                        sender: users[2].first_name,
+                        content: "Yes, I'll be there. Looking forward to it!",
+                        time: "10:15 AM",
+                    },
+                    {
+                        sender: "Charlie",
+                        content: "Same here, see you all soon!",
+                        time: "10:30 AM",
+                    },
+                ],
+            },
+        ];
+
+        // Store threads in a map for quick access by id
+        threads.forEach(thread => this.messageThreadsMap.set(thread.id, thread));
+
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve([
-                    {
-                        id: "thread-1",
-                        subject: "Naturalization",
-                        participants: [users[0].first_name, users[1].first_name],
-                        date: "2025-04-01",
-                        messages: [
-                            {
-                                sender: users[0].first_name,
-                                content: "I'm sorry, but I can't assist with that.",
-                                time: "09:45 AM",
-                            },
-                            {
-                                sender: users[1].first_name,
-                                content: "No worries! Let us know if you change your mind.",
-                                time: "10:02 AM",
-                            },
-                        ],
-                    },
-                    {
-                        id: "thread-2",
-                        subject: "Visa Application",
-                        participants: [users[2].first_name, users[3].first_name],
-                        date: "2025-03-29",
-                        messages: [
-                            {
-                                sender: users[2].first_name,
-                                content: "Any updates on my application?",
-                                time: "2:30 PM",
-                            },
-                            {
-                                sender: users[3].first_name,
-                                content: "It’s currently under review.",
-                                time: "2:45 PM",
-                            },
-                        ],
-                    },
-                ]);
+                resolve(threads);
             }, 2000); // 2-second delay
         });
     }
-}
 
+    async getDetailedMessage(id: string, signal: AbortSignal): Promise<{ id: string; subject: string; participants: string[]; groupedMessages: GroupedMessages }> {
+        // Retrieve the subject from the stored message threads
+        const thread = this.messageThreadsMap.get(id);
+        if (!thread) {
+            throw new Error("Message thread not found");
+        }
+
+        // Simulating an API call to fetch detailed message data by ID
+        const response = await fetch(`${this.baseURL}/users/${id}`, {
+            signal,
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch detailed message");
+        }
+
+        // Simulating the data structure based on getMessageThreads
+        const users = await response.json();
+        const groupedMessages: GroupedMessages = {
+            "2025-04-01": [
+                {
+                    sender: users.data.first_name,
+                    content: "Hey, are we still on for the meeting tomorrow?",
+                    time: "09:00 AM",
+                },
+                {
+                    sender: "You",
+                    content: "Yes, absolutely. What time works for you?",
+                    time: "09:05 AM",
+                },
+                {
+                    sender: "Charlie",
+                    content: "I can join anytime after 10 AM.",
+                    time: "09:10 AM",
+                },
+            ],
+            "2025-04-02": [
+                {
+                    sender: "You",
+                    content: "Just checking in, are we all set for the meeting?",
+                    time: "10:00 AM",
+                },
+                {
+                    sender: users.data.first_name,
+                    content: "Yes, I'll be there. Looking forward to it!",
+                    time: "10:15 AM",
+                },
+                {
+                    sender: "Charlie",
+                    content: "Same here, see you all soon!",
+                    time: "10:30 AM",
+                },
+            ],
+        };
+
+        return {
+            id: `thread-${id}`,
+            subject: thread.subject, // Use the subject from the message thread
+            participants: [users.data.first_name, "Me", "Charlie"],
+            groupedMessages,
+        };
+    }
+}
 
 const messagesService = new MessagesService();
 export default messagesService;

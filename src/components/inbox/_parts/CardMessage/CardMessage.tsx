@@ -3,11 +3,13 @@ import { MessageThread } from '@/http/messages';
 
 interface CardMessageProps {
     data: MessageThread
+    onClick: () => void
 }
 
-const CardMessage: React.FC<CardMessageProps> = ({ data }) => {
+const CardMessage: React.FC<CardMessageProps> = ({ data, ...props }) => {
+    const reversedMessages = [...data.messages].reverse();
     return (
-        <div className='flex gap-[17px] px-[34px] pt-[22px] cursor-pointer hover:bg-gray-100 w-full box-border'>
+        <div className='flex gap-[17px] px-[34px] pt-[22px] cursor-pointer hover:bg-gray-100 w-full box-border' {...props}>
             <div className='flex w-full gap-[17px] border-b border-[#828282]'>
                 {/* start: icon user */}
                 <svg width="51" height="34" viewBox="0 0 51 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,8 +23,8 @@ const CardMessage: React.FC<CardMessageProps> = ({ data }) => {
                     <div className='flex gap-2'>
                         <p className='text-[#2F80ED] text-base font-bold'>{data.subject}</p> <span className='text-[#4F4F4F] font-light'>{data.date}</span>
                     </div>
-                    <p className='text-sm font-bold text-[#4F4F4F]'>{data.messages[0].sender} :</p>
-                    <p className='text-sm font-light text-[#4F4F4F]'>{data.messages[0].content}</p>
+                    <p className='text-sm font-bold text-[#4F4F4F]'>{reversedMessages[0].sender} :</p>
+                    <p className='text-sm font-light text-[#4F4F4F]'>{reversedMessages[0].content}</p>
                 </div>
             </div>
         </div>

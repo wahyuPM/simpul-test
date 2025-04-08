@@ -13,7 +13,7 @@ const FloatingButton: React.FC = () => {
     const transitionClasses = "relative transition-transform duration-300";
     const orderTransitionClass = "transition-order duration-300";
 
-    const labels = ['Task', 'Inbox'];
+    const labels: floatButtonModeType[] = ['Task', 'Inbox'];
 
     const handleClickButtonMode = (value: floatButtonModeType) => {
         setBtnMode(prev => prev === value ? null : value);
