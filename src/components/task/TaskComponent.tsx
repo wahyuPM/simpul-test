@@ -13,17 +13,17 @@ interface Task {
 
 const TaskComponent: React.FC = () => {
     const btnMode = useAtomValue(floatButtonMode);
-    const [detailTaskMode, setDetailTaskMode] = useState(false)
+    const [, setDetailTaskMode] = useState(false)
 
-    const toggleDetailTask = (value: boolean) => {
-        setDetailTaskMode(value)
-    }
+    // const toggleDetailTask = (value: boolean) => {
+    //     setDetailTaskMode(value)
+    // }
 
     useEffect(() => {
         setDetailTaskMode(false)
     }, [btnMode])
 
-    const [tasks, setTasks] = useState<Task[]>([
+    const [tasks,] = useState<Task[]>([
         {
             id: 1,
             title: 'Close off Case #012920- RODRIGUES, Amiguel',
